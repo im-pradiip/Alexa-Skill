@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "prime learn",
+            "invocationName": "odd even fun",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
