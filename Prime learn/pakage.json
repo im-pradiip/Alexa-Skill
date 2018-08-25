@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "prime learn",
+            "invocationName": "knowledge fact",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
@@ -16,14 +16,12 @@
                     "samples": []
                 },
                 {
-                    "name": "whatismathfun",
+                    "name": "whatisknowledgefact",
                     "slots": [],
                     "samples": [
-                        "maths fun",
-                        "tell me prime fun",
-                        "prime fun",
-                        "math fun",
-                        "tell me math fun"
+                        "learn knowledge fact",
+                        "tell me some knowledge fact",
+                        "knowledge fun"                                             
                     ]
                 }
             ],
