@@ -1,0 +1,97 @@
+def lambda_handler(event, context):
+    if event['request']['type'] == "LaunchRequest" :
+        return onLaunch(event['request'], event['session'])
+    elif event['request']['type'] == "IntentRequest" :
+        return onIntent(event['request'], event['session'])
+    elif event['request']['type'] == "SessionEndedRequest" :
+        return onSessionEnd(event['request'], event['session'])
+
+def onLaunch(launchRequest, session):
+    return welcomeuser()
+
+def onIntent(intentRequest, session):
+             
+    intent = intentRequest['intent']
+    intentName = intentRequest['intent']['name']
+    if intentName == "whatisknowledgefact":
+        return fun_math(intent, session)
+    elif intentName == "AMAZON.HelpIntent":
+        return welcomeuser()
+    elif intentName == "AMAZON.CancelIntent" or intentName == "AMAZON.StopIntent":
+        return handleSessionEndRequest()
+    else:
+        raise ValueError("Invalid intent")
+
+def onSessionEnd(sessionEndedRequest, session):
+    print("on_session_ended requestId=" + sessionEndedRequest['requestId'] + ", sessionId=" + session['sessionId'])
+
+def welcomeuser():
+    sessionAttributes = {}
+    cardTitle = " Hello"
+    speechOutput =  "Hello , Welcome to knowledge fact! " \
+                    "You can know interesting facts about largest longest things in the world"
+    repromptText =  "You can know interesting facts which bost your knowledge"
+    shouldEndSession = False
+    
+    return buildResponse(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession))
+
+def fun_math(intent, session):
+    import random
+    index = random.randint(0,len(prime)-1)
+    cardTitle = intent['name']
+    sessionAttributes = {}
+    speechOutput = "knowledge fact that is actually a knowledge " + prime[index] 
+    repromptText = "You can know interesting facts about whether they are longest deepest largest by saying Tell me knowlege fact"
+    shouldEndSession = True                   
+    return buildResponse(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession))
+
+def handleSessionEndRequest():
+    cardTitle = "Session Ended"
+    speechOutput = "Thank you for using knowledge fact Alexa Skills Kit. " \
+                    "Have a great time! keep reading facts cheers!! "
+    shouldEndSession = True
+    return buildResponse({}, buildSpeechletResponse(cardTitle, speechOutput, None, shouldEndSession))
+
+def buildSpeechletResponse(title, output, repromptTxt, endSession):
+    return {
+        'outputSpeech': {
+            'type': 'PlainText',
+            'text': output
+            },
+            
+        'card': {
+            'type': 'Simple',
+            'title': title,
+            'content': output
+            },
+            
+        'reprompt': {
+            'outputSpeech': {
+                'type': 'PlainText',
+                'text': repromptTxt
+                }
+            },
+        'shouldEndSession': endSession
+    }
+
+
+def buildResponse(sessionAttr , speechlet):
+    return {
+        'version': '1.0',
+        'sessionAttributes': sessionAttr,
+        'response': speechlet
+    }
+
+
+
+prime = [ "There is no largest prime number." ,
+          "The Pacific Ocean is the largest and deepest of the world ocean basins." ,
+          "The  longest river in the world is the Nile.",
+          "Since the demotion of Pluto as a planet in 2006, Neptune is now the farthest major planet from the Sun." ,
+          " the common swift holds the record for the longest continuous flight time of any bird. Alpine swifts can fly up to six months without stopping, and great frigate birds,
+          with their giant 7½-foot wingspans, can soar across the Indian Ocean for about two months on end." ,
+          "The Isner–Mahut match at the 2010 Wimbledon Championships holds the record for the longest tennis match both in time and games played, which is about 11 hour 5 minutes." ,
+          "The world's longest bridge is the Danyang–Kunshan Grand Bridge in China, part of the Beijing-Shanghai High-Speed Railway.
+          The bridge, which opened in June 2011, spans 102.4 miles (165 kilometers).",
+          "the Gotthard Base Tunnel is the longest railway tunnel in the world"
+        ]
